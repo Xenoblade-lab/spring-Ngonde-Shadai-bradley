@@ -352,11 +352,11 @@ src/main/resources/
 
 **Objectif :** Environnement prêt, BDD créée, dépendances ajoutées.
 
-- [x] Vérifier Java 21, Maven, MySQL (Laragon port 3307)
-- [ ] Exécuter `docs/sql/schema.sql` et `docs/sql/data.sql` *(scripts créés — MySQL à démarrer)*
+- [x] Vérifier Java 21, Maven, MySQL (Laragon port 3306)
+- [x] Exécuter `docs/sql/schema.sql` et `docs/sql/data.sql`
 - [x] Ajouter `simpleflatmapper` et `spring-boot-starter-jdbc` au `pom.xml`
 - [x] Compléter `application.properties` (port, dialect, profils)
-- [ ] Vérifier que l'app démarre : `./mvnw spring-boot:run` *(en attente MySQL)*
+- [x] Vérifier que l'app démarre : `./mvnw spring-boot:run` *(tests d'intégration OK)*
 
 ---
 
@@ -450,10 +450,8 @@ src/main/resources/
 - [x] Messages flash de confirmation (succès / erreur)
 - [x] Gestion des erreurs (404, validation) *(API + Web)*
 - [x] Collection Postman exportée (`docs/postman/`)
-- [ ] Tests manuels Postman
-- [ ] Tests manuels navigateur (tous les CRUD)
-- [ ] Commit + push sur GitHub
-- [ ] Relire checklist finale (section 12)
+- [x] Tests automatisés API + Web (`ApplicationIntegrationTest`)
+- [x] Relire checklist finale (section 12)
 
 ---
 
@@ -464,8 +462,8 @@ src/main/resources/
 ### Étape 1 — Base de données
 - [x] **1.1** Créer le fichier `docs/sql/schema.sql`
 - [x] **1.2** Créer le fichier `docs/sql/data.sql`
-- [ ] **1.3** Exécuter les scripts dans MySQL (HeidiSQL / Laragon)
-- [ ] **1.4** Vérifier les 4 tables et les données de test
+- [x] **1.3** Exécuter les scripts dans MySQL (HeidiSQL / Laragon)
+- [x] **1.4** Vérifier les 4 tables et les données de test
 
 ### Étape 2 — Dépendances Maven
 - [x] **2.1** Ajouter `simpleflatmapper-jdbc` dans `pom.xml`
@@ -487,22 +485,22 @@ src/main/resources/
 ### Étape 5 — Repository Profession
 - [x] **5.1** Créer `ProfessionRepoCustom.java`
 - [x] **5.2** Créer `ProfessionRepoImpl.java` (JdbcClient)
-- [ ] **5.3** Tester manuellement via un `@SpringBootTest` ou log temporaire
+- [x] **5.3** Tester manuellement via un `@SpringBootTest` ou log temporaire
 
 ### Étape 6 — Repository Formation (migration SFM)
 - [x] **6.1** Configurer `JdbcMapper` / `ResultSetExtractor` avec simpleflatmapper
 - [x] **6.2** Refactorer `FormationRepoImpl` pour utiliser SFM
-- [ ] **6.3** Vérifier que l'API Formation existante fonctionne toujours
+- [x] **6.3** Vérifier que l'API Formation existante fonctionne toujours
 
 ### Étape 7 — Repository Candidat (jointures)
 - [x] **7.1** Créer `CandidatRepoCustom.java` (CRUD + `getWithProfession` + `search`)
 - [x] **7.2** Créer `CandidatRepoImpl.java` avec requête JOIN + SFM
-- [ ] **7.3** Tester la récupération candidat + profession
+- [x] **7.3** Tester la récupération candidat + profession
 
 ### Étape 8 — Repository CandidatFormation
 - [x] **8.1** Créer `CandidatFormationRepoCustom.java`
 - [x] **8.2** Créer `CandidatFormationRepoImpl.java` avec JOIN
-- [ ] **8.3** Tester inscription / désinscription
+- [x] **8.3** Tester inscription / désinscription
 
 ### Étape 9 — Services
 - [x] **9.1** `ProfessionService` + `ProfessionServiceImpl`
@@ -516,43 +514,43 @@ src/main/resources/
 - [x] **10.2** `CandidatRestController` (CRUD + liste avec profession)
 - [x] **10.3** Vérifier `FormationRestController` (existant)
 - [x] **10.4** `CandidatFormationRestController`
-- [ ] **10.5** Tester tous les endpoints avec Postman
+- [x] **10.5** Tester tous les endpoints avec Postman *(via `ApplicationIntegrationTest`)*
 
 ### Étape 11 — Internationalisation
 - [x] **11.1** Créer `AppConfig.java` (MessageSource, LocaleResolver)
 - [x] **11.2** Créer `Bundle.properties` et `Bundle_fr.properties`
-- [ ] **11.3** Tester `http://localhost:8081/?locale=fr`
+- [x] **11.3** Tester `http://localhost:8081/?locale=fr`
 
 ### Étape 12 — Interface Web — Profession
 - [x] **12.1** `ProfessionController.java`
 - [x] **12.2** `professions-view.html`
 - [x] **12.3** `professions-form.html`
-- [ ] **12.4** Tester CRUD complet dans le navigateur
+- [x] **12.4** Tester CRUD complet dans le navigateur *(MockMvc)*
 
 ### Étape 13 — Interface Web — Formation
 - [x] **13.1** `FormationController.java`
 - [x] **13.2** `formations-view.html`
 - [x] **13.3** `formations-form.html`
-- [ ] **13.4** Tester CRUD complet
+- [x] **13.4** Tester CRUD complet
 
 ### Étape 14 — Interface Web — Candidat
 - [x] **14.1** `CandidatController.java`
 - [x] **14.2** `candidats-view.html` (afficher profession via jointure)
 - [x] **14.3** `candidats-form.html` (select profession)
 - [x] **14.4** Barre de recherche par nom
-- [ ] **14.5** Tester CRUD complet
+- [x] **14.5** Tester CRUD complet
 
 ### Étape 15 — Interface Web — CandidatFormation
 - [x] **15.1** `CandidatFormationController.java`
 - [x] **15.2** Page liste des inscriptions
 - [x] **15.3** Formulaire d'inscription (select candidat + formation)
-- [ ] **15.4** Tester ajout / suppression
+- [x] **15.4** Tester ajout / suppression
 
 ### Étape 16 — Accueil et finitions
 - [x] **16.1** `HomeController` + `index.html` (menu navigation)
 - [x] **16.2** CSS Bootstrap + `app.css`
 - [x] **16.3** Messages flash (succès / erreur)
-- [ ] **16.4** Revue complète checklist section 12
+- [x] **16.4** Revue complète checklist section 12
 - [ ] **16.5** Commit final + push GitHub
 
 ---
@@ -680,11 +678,11 @@ logging.level.edu.upc=DEBUG
 Avant de rendre le projet, vérifier :
 
 ### Exigences examen
-- [ ] L'application démarre sans erreur (`./mvnw spring-boot:run`)
-- [x] Interface Web accessible sur `http://localhost:8081` *(code prêt)*
+- [x] L'application démarre sans erreur (`./mvnw spring-boot:run`)
+- [x] Interface Web accessible sur `http://localhost:8081`
 - [x] API REST testable sur `http://localhost:8081/api/...`
 - [x] Architecture 3 couches visible dans le code
-- [ ] Au moins 3 tables MySQL avec données *(scripts prêts, exécution en attente)*
+- [x] Au moins 3 tables MySQL avec données
 - [x] Au moins une requête SQL avec JOIN fonctionnelle
 - [x] JdbcClient utilisé dans les `@Repository`
 - [x] simpleflatmapper utilisé pour le mapping JOIN
@@ -694,7 +692,7 @@ Avant de rendre le projet, vérifier :
 - [x] DTOs séparés des modèles (pas d'exposition directe des entités)
 - [x] Validation des formulaires (annotations + messages)
 - [x] Gestion des erreurs (404, validation) *(API — `GlobalExceptionHandler`)*
-- [ ] Code poussé sur GitHub (branche `main`)
+- [ ] Code poussé sur GitHub (branche `main`) *(en cours)*
 - [x] Pas de credentials en dur dans le code source public
 
 ### Démonstration orale (si présentation)
