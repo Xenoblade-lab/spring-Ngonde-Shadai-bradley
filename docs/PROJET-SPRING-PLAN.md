@@ -452,6 +452,7 @@ src/main/resources/
 - [x] Collection Postman exportée (`docs/postman/`)
 - [x] Tests automatisés API + Web (`ApplicationIntegrationTest`)
 - [x] Relire checklist finale (section 12)
+- [x] Commit + push sur GitHub
 
 ---
 
@@ -551,7 +552,7 @@ src/main/resources/
 - [x] **16.2** CSS Bootstrap + `app.css`
 - [x] **16.3** Messages flash (succès / erreur)
 - [x] **16.4** Revue complète checklist section 12
-- [ ] **16.5** Commit final + push GitHub
+- [x] **16.5** Commit final + push GitHub
 
 ---
 
@@ -692,7 +693,7 @@ Avant de rendre le projet, vérifier :
 - [x] DTOs séparés des modèles (pas d'exposition directe des entités)
 - [x] Validation des formulaires (annotations + messages)
 - [x] Gestion des erreurs (404, validation) *(API — `GlobalExceptionHandler`)*
-- [ ] Code poussé sur GitHub (branche `main`) *(en cours)*
+- [x] Code poussé sur GitHub (branche `main`)
 - [x] Pas de credentials en dur dans le code source public
 
 ### Démonstration orale (si présentation)
