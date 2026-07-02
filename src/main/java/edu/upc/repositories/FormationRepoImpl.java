@@ -1,7 +1,6 @@
 package edu.upc.repositories;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.simple.JdbcClient;
@@ -10,62 +9,49 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import edu.upc.models.Formation;
+import edu.upc.utils.JdbcSfmHelper;
 
 @Repository
 public class FormationRepoImpl implements FormationRepoCustom {
-	
+
+	private static final String SQL_INSERT = "INSERT INTO formations (description, duree) VALUES (?, ?)";
+	private static final String SQL_UPDATE = "UPDATE formations SET description=?, duree=? WHERE id=?";
+	private static final String SQL_DELETE = "DELETE FROM formations WHERE id=?";
+	private static final String SQL_BY_ID = "SELECT id, description, duree FROM formations WHERE id=?";
+	private static final String SQL_ALL = "SELECT id, description, duree FROM formations ORDER BY description";
+
 	@Autowired
 	private JdbcClient jdbcClient;
 
+	@Autowired
+	private JdbcSfmHelper sfmHelper;
+
 	@Override
 	public long create(Formation entity) {
-		String sql = "INSERT INTO formations (description, duree) VALUES (?, ?)";
-		
 		Object[] params = new Object[] { entity.getDescription(), entity.getDuree() };
-		
-		final KeyHolder holder = new GeneratedKeyHolder();
-		
-		jdbcClient.sql(sql).params(params).update(holder, "id");
-		
+		KeyHolder holder = new GeneratedKeyHolder();
+		jdbcClient.sql(SQL_INSERT).params(params).update(holder, "id");
 		return holder.getKey().longValue();
 	}
 
 	@Override
 	public void update(long id, Formation entity) {
-		String sql = "UPDATE formations SET description=?, duree=? WHERE id=?";
-		
-		Object[] params = new Object[] { entity.getDescription(), entity.getDuree(), id };
-		
-		jdbcClient.sql(sql).params(params).update();
+		jdbcClient.sql(SQL_UPDATE).params(entity.getDescription(), entity.getDuree(), id).update();
 	}
 
 	@Override
 	public void delete(long id) {
-		String sql = "DELETE FROM formations WHERE id=?";
-		
-		Object[] params = new Object[] { id };
-		
-		jdbcClient.sql(sql).params(params).update();
+		jdbcClient.sql(SQL_DELETE).params(id).update();
 	}
 
 	@Override
 	public Formation getById(long id) {
-		String sql = "SELECT * FROM formations WHERE id=?";
-		
-		Object[] params = new Object[] { id };
-		
-		Optional<Formation> row = jdbcClient.sql(sql).params(params).query(Formation.class).optional();
-		
-		return row != null ? row.get() : null;
+		return sfmHelper.queryOne(SQL_BY_ID, Formation.class, new Object[] { id });
 	}
 
 	@Override
 	public List<Formation> get() {
-		String sql = "SELECT * FROM formations ORDER BY description";
-		
-		return jdbcClient.sql(sql).query(Formation.class).list();
+		return sfmHelper.query(SQL_ALL, Formation.class);
 	}
-	
-	
 
 }

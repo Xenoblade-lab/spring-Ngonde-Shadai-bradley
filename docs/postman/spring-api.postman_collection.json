@@ -1,0 +1,34 @@
+{
+  "info": {
+    "name": "Spring Ngonde Shadai Bradley",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Professions",
+      "item": [
+        { "name": "Liste", "request": { "method": "GET", "url": "http://localhost:8081/api/professions" } },
+        { "name": "Créer", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"description\": \"Architecte\"\n}" }, "url": "http://localhost:8081/api/professions" } }
+      ]
+    },
+    {
+      "name": "Candidats",
+      "item": [
+        { "name": "Liste", "request": { "method": "GET", "url": "http://localhost:8081/api/candidats" } },
+        { "name": "Recherche", "request": { "method": "GET", "url": "http://localhost:8081/api/candidats?keyword=Bradley" } }
+      ]
+    },
+    {
+      "name": "Formations",
+      "item": [
+        { "name": "Liste", "request": { "method": "GET", "url": "http://localhost:8081/api/formations" } }
+      ]
+    },
+    {
+      "name": "Inscriptions",
+      "item": [
+        { "name": "Liste", "request": { "method": "GET", "url": "http://localhost:8081/api/candidats-formations" } }
+      ]
+    }
+  ]
+}

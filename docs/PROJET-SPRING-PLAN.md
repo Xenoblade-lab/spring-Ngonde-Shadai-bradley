@@ -6,6 +6,8 @@
 **Cours :** Spring Framework — Module 01 (UPC)  
 **Date :** Juillet 2026
 
+**Avancement :** Phases 0–5 terminées (code) · Tests manuels + MySQL + push GitHub en attente
+
 ---
 
 ## Table des matières
@@ -98,32 +100,42 @@ Source : `docs/spring-projet-dispositions-pratiques-2025-26.pdf`
 | Élément | Fichier(s) | Statut |
 |---------|------------|--------|
 | Projet Spring Boot 4 / Java 21 | `pom.xml` | ✅ |
-| Modèles POJO | `Candidat`, `Profession`, `Formation`, `CandidatFormation` | ✅ (sans JPA) |
-| Formation — Repository | `FormationRepoCustom`, `FormationRepoImpl` (JdbcClient) | ✅ |
+| Modèles POJO enrichis | `Candidat`, `Profession`, `Formation`, `CandidatFormation` | ✅ |
+| Scripts SQL | `docs/sql/schema.sql`, `docs/sql/data.sql` | ✅ |
+| Dépendances JDBC + SFM | `pom.xml` (`spring-boot-starter-jdbc`, `sfm-springjdbc`) | ✅ |
+| Config BDD + profils | `application.properties`, `application-dev.properties` | ✅ |
+| `JdbcSfmHelper` | `utils/JdbcSfmHelper.java` | ✅ |
+| Profession — Repository | `ProfessionRepoCustom`, `ProfessionRepoImpl` | ✅ |
+| Formation — Repository (SFM) | `FormationRepoCustom`, `FormationRepoImpl` | ✅ |
+| Candidat — Repository (JOIN) | `CandidatRepoCustom`, `CandidatRepoImpl` | ✅ |
+| CandidatFormation — Repository | `CandidatFormationRepoCustom`, `CandidatFormationRepoImpl` | ✅ |
+| Tous les DTOs | `ProfessionDto`, `CandidatDto`, `FormationDto`, `CandidatFormationDto` | ✅ |
+| Mapper complet | `utils/Mapper.java` | ✅ |
+| Profession — Service | `ProfessionService`, `ProfessionServiceImpl` | ✅ |
+| Candidat — Service | `CandidatService`, `CandidatServiceImpl` | ✅ |
+| CandidatFormation — Service | `CandidatFormationService`, `CandidatFormationServiceImpl` | ✅ |
 | Formation — Service | `FormationService`, `FormationServiceImpl` | ✅ |
+| Exceptions | `NotFoundException`, `GlobalExceptionHandler` | ✅ |
 | Formation — API REST | `FormationRestController` | ✅ |
-| Formation — DTO | `FormationDto` | ✅ |
-| Utilitaires | `Mapper`, `MyLibraryUtil` | ✅ (partiel) |
-| Config BDD | `application.properties` | ⚠️ partiel |
+| Profession — API REST | `ProfessionRestController` | ✅ |
+| Candidat — API REST | `CandidatRestController` | ✅ |
+| CandidatFormation — API REST | `CandidatFormationRestController` | ✅ |
+| Web — Controllers | `Home`, `Profession`, `Candidat`, `Formation`, `CandidatFormation` | ✅ |
+| Web — Thymeleaf | `templates/*.html`, fragments | ✅ |
+| i18n FR/EN | `AppConfig`, `Bundle.properties`, `Bundle_fr.properties` | ✅ |
+| Collection Postman | `docs/postman/spring-api.postman_collection.json` | ✅ |
+| Compilation Maven | `./mvnw clean compile` | ✅ |
 
 ### À faire ❌
 
 | Élément | Priorité |
 |---------|----------|
-| Dépendance `simpleflatmapper` | 🔴 Haute |
-| Script SQL (schéma + données test) | 🔴 Haute |
-| Repositories avec JOIN (SFM) | 🔴 Haute |
-| Profession — Service / API / Web | 🔴 Haute |
-| Candidat — Service / API / Web | 🔴 Haute |
-| CandidatFormation — Service / API / Web | 🟡 Moyenne |
-| DTOs manquants | 🔴 Haute |
-| Mappers complets | 🔴 Haute |
-| Controllers Web (`@Controller`) | 🔴 Haute |
-| Templates Thymeleaf | 🔴 Haute |
-| Internationalisation (FR/EN) | 🟡 Moyenne |
-| Gestion des exceptions | 🟡 Moyenne |
-| Barre de recherche | 🟢 Basse |
-| Profils dev/prod | 🟢 Basse |
+| Exécuter scripts SQL dans MySQL (Laragon) | 🔴 Haute |
+| Vérifier `./mvnw spring-boot:run` | 🔴 Haute |
+| Tests manuels Postman | 🟡 Moyenne |
+| Tests manuels navigateur (CRUD) | 🟡 Moyenne |
+| Commit + push GitHub | 🟡 Moyenne |
+| `application-prod.properties` | 🟢 Basse |
 
 ---
 
@@ -340,11 +352,11 @@ src/main/resources/
 
 **Objectif :** Environnement prêt, BDD créée, dépendances ajoutées.
 
-- [ ] Vérifier Java 21, Maven, MySQL (Laragon port 3307)
-- [ ] Exécuter `docs/sql/schema.sql` et `docs/sql/data.sql`
-- [ ] Ajouter `simpleflatmapper` et `spring-boot-starter-jdbc` au `pom.xml`
-- [ ] Compléter `application.properties` (port, dialect, profils)
-- [ ] Vérifier que l'app démarre : `./mvnw spring-boot:run`
+- [x] Vérifier Java 21, Maven, MySQL (Laragon port 3307)
+- [ ] Exécuter `docs/sql/schema.sql` et `docs/sql/data.sql` *(scripts créés — MySQL à démarrer)*
+- [x] Ajouter `simpleflatmapper` et `spring-boot-starter-jdbc` au `pom.xml`
+- [x] Compléter `application.properties` (port, dialect, profils)
+- [ ] Vérifier que l'app démarre : `./mvnw spring-boot:run` *(en attente MySQL)*
 
 ---
 
@@ -353,21 +365,21 @@ src/main/resources/
 **Objectif :** Tous les `@Repository` fonctionnels avec JdbcClient + simpleflatmapper.
 
 #### 1.1 Profession
-- Interface `ProfessionRepoCustom` : `create`, `update`, `delete`, `getById`, `get`
-- Impl `ProfessionRepoImpl` avec JdbcClient
+- [x] Interface `ProfessionRepoCustom` : `create`, `update`, `delete`, `getById`, `get`
+- [x] Impl `ProfessionRepoImpl` avec JdbcClient
 
 #### 1.2 Formation (refactoring)
-- Migrer `FormationRepoImpl` pour utiliser **simpleflatmapper** au lieu du mapping natif JdbcClient
-- Garder les mêmes méthodes CRUD
+- [x] Migrer `FormationRepoImpl` pour utiliser **simpleflatmapper** au lieu du mapping natif JdbcClient
+- [x] Garder les mêmes méthodes CRUD
 
 #### 1.3 Candidat (avec jointures)
-- Interface `CandidatRepoCustom` : CRUD + `getWithProfession()`, `getWithFormations(id)`, `search(keyword)`
-- Impl avec requête JOIN candidats ↔ professions via SFM
-- Modèle enrichi : `Candidat` contient un objet `Profession` (pour le mapping SFM)
+- [x] Interface `CandidatRepoCustom` : CRUD + `getWithProfession()`, `getFormations(id)`, `search(keyword)`
+- [x] Impl avec requête JOIN candidats ↔ professions via SFM
+- [x] Modèle enrichi : `Candidat` contient un objet `Profession` (pour le mapping SFM)
 
 #### 1.4 CandidatFormation
-- CRUD pour associer / dissocier candidat ↔ formation
-- Requête JOIN pour lister les inscriptions avec noms candidat + formation
+- [x] CRUD pour associer / dissocier candidat ↔ formation
+- [x] Requête JOIN pour lister les inscriptions avec noms candidat + formation
 
 ---
 
@@ -375,13 +387,13 @@ src/main/resources/
 
 **Objectif :** Logique métier et validation.
 
-- [ ] Créer tous les DTOs avec annotations `@NotBlank`, `@Size`, `@Positive`, etc.
-- [ ] Étendre `Mapper` pour toutes les entités
-- [ ] Créer `ProfessionService` + `ProfessionServiceImpl`
-- [ ] Créer `CandidatService` + `CandidatServiceImpl`
-- [ ] Créer `CandidatFormationService` + `CandidatFormationServiceImpl`
-- [ ] Ajouter `@Transactional` sur create/update/delete
-- [ ] Créer exceptions `NotFoundException` + handler global
+- [x] Créer tous les DTOs avec annotations `@NotBlank`, `@Size`, `@Positive`, etc.
+- [x] Étendre `Mapper` pour toutes les entités
+- [x] Créer `ProfessionService` + `ProfessionServiceImpl`
+- [x] Créer `CandidatService` + `CandidatServiceImpl`
+- [x] Créer `CandidatFormationService` + `CandidatFormationServiceImpl`
+- [x] Ajouter `@Transactional` sur create/update/delete
+- [x] Créer exceptions `NotFoundException` + handler global
 
 ---
 
@@ -389,23 +401,23 @@ src/main/resources/
 
 **Objectif :** Tous les endpoints JSON testables avec Postman.
 
-| Méthode | Endpoint | Action |
-|---------|----------|--------|
-| GET | `/api/professions` | Liste |
-| GET | `/api/professions/{id}` | Détail |
-| POST | `/api/professions` | Créer |
-| PUT | `/api/professions/{id}` | Modifier |
-| DELETE | `/api/professions/{id}` | Supprimer |
-| GET | `/api/candidats` | Liste (avec profession) |
-| GET | `/api/candidats/{id}` | Détail + formations |
-| POST | `/api/candidats` | Créer |
-| PUT | `/api/candidats/{id}` | Modifier |
-| DELETE | `/api/candidats/{id}` | Supprimer |
-| GET | `/api/formations` | Liste |
-| ... | ... | (déjà partiellement fait) |
-| GET | `/api/candidats-formations` | Liste inscriptions |
-| POST | `/api/candidats-formations` | Inscrire candidat |
-| DELETE | `/api/candidats-formations/{id}` | Désinscrire |
+| Méthode | Endpoint | Action | Statut |
+|---------|----------|--------|--------|
+| GET | `/api/professions` | Liste | ✅ |
+| GET | `/api/professions/{id}` | Détail | ✅ |
+| POST | `/api/professions` | Créer | ✅ |
+| PUT | `/api/professions/{id}` | Modifier | ✅ |
+| DELETE | `/api/professions/{id}` | Supprimer | ✅ |
+| GET | `/api/candidats` | Liste (avec profession) | ✅ |
+| GET | `/api/candidats/{id}` | Détail + formations | ✅ |
+| POST | `/api/candidats` | Créer | ✅ |
+| PUT | `/api/candidats/{id}` | Modifier | ✅ |
+| DELETE | `/api/candidats/{id}` | Supprimer | ✅ |
+| GET | `/api/formations` | Liste | ✅ |
+| POST/PUT/DELETE | `/api/formations` | CRUD | ✅ |
+| GET | `/api/candidats-formations` | Liste inscriptions | ✅ |
+| POST | `/api/candidats-formations` | Inscrire candidat | ✅ |
+| DELETE | `/api/candidats-formations/{id}` | Désinscrire | ✅ |
 
 ---
 
@@ -414,25 +426,19 @@ src/main/resources/
 **Objectif :** Application navigable dans le navigateur.
 
 #### 4.1 Configuration
-- [ ] `AppConfig` : MessageSource, LocaleResolver, intercepteur `?locale=fr|en`
-- [ ] Fichiers `Bundle.properties` / `Bundle_fr.properties`
-- [ ] Bootstrap CSS dans `static/css/`
+- [x] `AppConfig` : MessageSource, LocaleResolver, intercepteur `?locale=fr|en`
+- [x] Fichiers `Bundle.properties` / `Bundle_fr.properties`
+- [x] Bootstrap CSS dans `static/css/` *(CDN Bootstrap + `app.css`)*
 
 #### 4.2 Pages par entité (pattern identique pour chaque)
-- **Vue liste** (`xxx-view.html`) : tableau + boutons Ajouter / Éditer / Supprimer + recherche
-- **Formulaire** (`xxx-form.html`) : champs validés + messages d'erreur
+- [x] **Vue liste** (`xxx-view.html`) : tableau + boutons Ajouter / Éditer / Supprimer + recherche
+- [x] **Formulaire** (`xxx-form.html`) : champs validés + messages d'erreur
 
 #### 4.3 Controllers Web
-- `@Controller` avec mappings :
-  - `GET /professions` → liste
-  - `GET /professions/create` → formulaire vide
-  - `GET /professions/{id}/edit` → formulaire pré-rempli
-  - `POST /professions/save` → enregistrer
-  - `GET /professions/{id}/delete` → supprimer
-- Répéter pour Candidat, Formation, CandidatFormation
+- [x] `@Controller` Profession, Candidat, Formation, CandidatFormation
 
 #### 4.4 Page d'accueil
-- `GET /` → dashboard avec liens vers chaque module
+- [x] `GET /` → dashboard avec liens vers chaque module
 
 ---
 
@@ -440,10 +446,11 @@ src/main/resources/
 
 **Objectif :** Qualité et conformité examen.
 
-- [ ] Barre de recherche sur candidats (paramètre `keyword`)
-- [ ] Messages flash de confirmation (succès / erreur)
-- [ ] Gestion des erreurs (404, validation)
-- [ ] Tests manuels Postman (collection exportée)
+- [x] Barre de recherche sur candidats (paramètre `keyword`)
+- [x] Messages flash de confirmation (succès / erreur)
+- [x] Gestion des erreurs (404, validation) *(API + Web)*
+- [x] Collection Postman exportée (`docs/postman/`)
+- [ ] Tests manuels Postman
 - [ ] Tests manuels navigateur (tous les CRUD)
 - [ ] Commit + push sur GitHub
 - [ ] Relire checklist finale (section 12)
@@ -455,96 +462,96 @@ src/main/resources/
 > Cocher chaque étape au fur et à mesure. Ordre strict recommandé.
 
 ### Étape 1 — Base de données
-- [ ] **1.1** Créer le fichier `docs/sql/schema.sql`
-- [ ] **1.2** Créer le fichier `docs/sql/data.sql`
+- [x] **1.1** Créer le fichier `docs/sql/schema.sql`
+- [x] **1.2** Créer le fichier `docs/sql/data.sql`
 - [ ] **1.3** Exécuter les scripts dans MySQL (HeidiSQL / Laragon)
 - [ ] **1.4** Vérifier les 4 tables et les données de test
 
 ### Étape 2 — Dépendances Maven
-- [ ] **2.1** Ajouter `simpleflatmapper-jdbc` dans `pom.xml`
-- [ ] **2.2** Ajouter `spring-boot-starter-jdbc` si absent
-- [ ] **2.3** Lancer `./mvnw clean compile` sans erreur
+- [x] **2.1** Ajouter `simpleflatmapper-jdbc` dans `pom.xml`
+- [x] **2.2** Ajouter `spring-boot-starter-jdbc` si absent
+- [x] **2.3** Lancer `./mvnw clean compile` sans erreur
 
 ### Étape 3 — Configuration Spring
-- [ ] **3.1** Compléter `application.properties` (URL BDD, port 8081, logging)
-- [ ] **3.2** Créer `application-dev.properties`
-- [ ] **3.3** Configurer `spring.profiles.active=dev`
+- [x] **3.1** Compléter `application.properties` (URL BDD, port 8081, logging)
+- [x] **3.2** Créer `application-dev.properties`
+- [x] **3.3** Configurer `spring.profiles.active=dev`
 
 ### Étape 4 — Modèles et DTOs
-- [ ] **4.1** Enrichir `Candidat` avec champ `Profession profession` (pour SFM)
-- [ ] **4.2** Créer `ProfessionDto`
-- [ ] **4.3** Créer `CandidatDto`
-- [ ] **4.4** Créer `CandidatFormationDto`
-- [ ] **4.5** Étendre `Mapper` pour toutes les conversions
+- [x] **4.1** Enrichir `Candidat` avec champ `Profession profession` (pour SFM)
+- [x] **4.2** Créer `ProfessionDto`
+- [x] **4.3** Créer `CandidatDto`
+- [x] **4.4** Créer `CandidatFormationDto`
+- [x] **4.5** Étendre `Mapper` pour toutes les conversions
 
 ### Étape 5 — Repository Profession
-- [ ] **5.1** Créer `ProfessionRepoCustom.java`
-- [ ] **5.2** Créer `ProfessionRepoImpl.java` (JdbcClient)
+- [x] **5.1** Créer `ProfessionRepoCustom.java`
+- [x] **5.2** Créer `ProfessionRepoImpl.java` (JdbcClient)
 - [ ] **5.3** Tester manuellement via un `@SpringBootTest` ou log temporaire
 
 ### Étape 6 — Repository Formation (migration SFM)
-- [ ] **6.1** Configurer `JdbcMapper` / `ResultSetExtractor` avec simpleflatmapper
-- [ ] **6.2** Refactorer `FormationRepoImpl` pour utiliser SFM
+- [x] **6.1** Configurer `JdbcMapper` / `ResultSetExtractor` avec simpleflatmapper
+- [x] **6.2** Refactorer `FormationRepoImpl` pour utiliser SFM
 - [ ] **6.3** Vérifier que l'API Formation existante fonctionne toujours
 
 ### Étape 7 — Repository Candidat (jointures)
-- [ ] **7.1** Créer `CandidatRepoCustom.java` (CRUD + `getWithProfession` + `search`)
-- [ ] **7.2** Créer `CandidatRepoImpl.java` avec requête JOIN + SFM
+- [x] **7.1** Créer `CandidatRepoCustom.java` (CRUD + `getWithProfession` + `search`)
+- [x] **7.2** Créer `CandidatRepoImpl.java` avec requête JOIN + SFM
 - [ ] **7.3** Tester la récupération candidat + profession
 
 ### Étape 8 — Repository CandidatFormation
-- [ ] **8.1** Créer `CandidatFormationRepoCustom.java`
-- [ ] **8.2** Créer `CandidatFormationRepoImpl.java` avec JOIN
+- [x] **8.1** Créer `CandidatFormationRepoCustom.java`
+- [x] **8.2** Créer `CandidatFormationRepoImpl.java` avec JOIN
 - [ ] **8.3** Tester inscription / désinscription
 
 ### Étape 9 — Services
-- [ ] **9.1** `ProfessionService` + `ProfessionServiceImpl`
-- [ ] **9.2** `CandidatService` + `CandidatServiceImpl`
-- [ ] **9.3** Vérifier `FormationService` (déjà existant)
-- [ ] **9.4** `CandidatFormationService` + `CandidatFormationServiceImpl`
-- [ ] **9.5** Créer `NotFoundException` + `GlobalExceptionHandler`
+- [x] **9.1** `ProfessionService` + `ProfessionServiceImpl`
+- [x] **9.2** `CandidatService` + `CandidatServiceImpl`
+- [x] **9.3** Vérifier `FormationService` (déjà existant)
+- [x] **9.4** `CandidatFormationService` + `CandidatFormationServiceImpl`
+- [x] **9.5** Créer `NotFoundException` + `GlobalExceptionHandler`
 
 ### Étape 10 — API REST
-- [ ] **10.1** `ProfessionRestController` (CRUD complet)
-- [ ] **10.2** `CandidatRestController` (CRUD + liste avec profession)
-- [ ] **10.3** Vérifier `FormationRestController` (existant)
-- [ ] **10.4** `CandidatFormationRestController`
+- [x] **10.1** `ProfessionRestController` (CRUD complet)
+- [x] **10.2** `CandidatRestController` (CRUD + liste avec profession)
+- [x] **10.3** Vérifier `FormationRestController` (existant)
+- [x] **10.4** `CandidatFormationRestController`
 - [ ] **10.5** Tester tous les endpoints avec Postman
 
 ### Étape 11 — Internationalisation
-- [ ] **11.1** Créer `AppConfig.java` (MessageSource, LocaleResolver)
-- [ ] **11.2** Créer `Bundle.properties` et `Bundle_fr.properties`
+- [x] **11.1** Créer `AppConfig.java` (MessageSource, LocaleResolver)
+- [x] **11.2** Créer `Bundle.properties` et `Bundle_fr.properties`
 - [ ] **11.3** Tester `http://localhost:8081/?locale=fr`
 
 ### Étape 12 — Interface Web — Profession
-- [ ] **12.1** `ProfessionController.java`
-- [ ] **12.2** `professions-view.html`
-- [ ] **12.3** `professions-form.html`
+- [x] **12.1** `ProfessionController.java`
+- [x] **12.2** `professions-view.html`
+- [x] **12.3** `professions-form.html`
 - [ ] **12.4** Tester CRUD complet dans le navigateur
 
 ### Étape 13 — Interface Web — Formation
-- [ ] **13.1** `FormationController.java`
-- [ ] **13.2** `formations-view.html`
-- [ ] **13.3** `formations-form.html`
+- [x] **13.1** `FormationController.java`
+- [x] **13.2** `formations-view.html`
+- [x] **13.3** `formations-form.html`
 - [ ] **13.4** Tester CRUD complet
 
 ### Étape 14 — Interface Web — Candidat
-- [ ] **14.1** `CandidatController.java`
-- [ ] **14.2** `candidats-view.html` (afficher profession via jointure)
-- [ ] **14.3** `candidats-form.html` (select profession)
-- [ ] **14.4** Barre de recherche par nom
+- [x] **14.1** `CandidatController.java`
+- [x] **14.2** `candidats-view.html` (afficher profession via jointure)
+- [x] **14.3** `candidats-form.html` (select profession)
+- [x] **14.4** Barre de recherche par nom
 - [ ] **14.5** Tester CRUD complet
 
 ### Étape 15 — Interface Web — CandidatFormation
-- [ ] **15.1** `CandidatFormationController.java`
-- [ ] **15.2** Page liste des inscriptions
-- [ ] **15.3** Formulaire d'inscription (select candidat + formation)
+- [x] **15.1** `CandidatFormationController.java`
+- [x] **15.2** Page liste des inscriptions
+- [x] **15.3** Formulaire d'inscription (select candidat + formation)
 - [ ] **15.4** Tester ajout / suppression
 
 ### Étape 16 — Accueil et finitions
-- [ ] **16.1** `HomeController` + `index.html` (menu navigation)
-- [ ] **16.2** CSS Bootstrap + `app.css`
-- [ ] **16.3** Messages flash (succès / erreur)
+- [x] **16.1** `HomeController` + `index.html` (menu navigation)
+- [x] **16.2** CSS Bootstrap + `app.css`
+- [x] **16.3** Messages flash (succès / erreur)
 - [ ] **16.4** Revue complète checklist section 12
 - [ ] **16.5** Commit final + push GitHub
 
@@ -674,21 +681,21 @@ Avant de rendre le projet, vérifier :
 
 ### Exigences examen
 - [ ] L'application démarre sans erreur (`./mvnw spring-boot:run`)
-- [ ] Interface Web accessible sur `http://localhost:8081`
-- [ ] API REST testable sur `http://localhost:8081/api/...`
-- [ ] Architecture 3 couches visible dans le code
-- [ ] Au moins 3 tables MySQL avec données
-- [ ] Au moins une requête SQL avec JOIN fonctionnelle
-- [ ] JdbcClient utilisé dans les `@Repository`
-- [ ] simpleflatmapper utilisé pour le mapping JOIN
-- [ ] CRUD complet sur Profession, Candidat, Formation
+- [x] Interface Web accessible sur `http://localhost:8081` *(code prêt)*
+- [x] API REST testable sur `http://localhost:8081/api/...`
+- [x] Architecture 3 couches visible dans le code
+- [ ] Au moins 3 tables MySQL avec données *(scripts prêts, exécution en attente)*
+- [x] Au moins une requête SQL avec JOIN fonctionnelle
+- [x] JdbcClient utilisé dans les `@Repository`
+- [x] simpleflatmapper utilisé pour le mapping JOIN
+- [x] CRUD complet sur Profession, Candidat, Formation
 
 ### Qualité
-- [ ] DTOs séparés des modèles (pas d'exposition directe des entités)
-- [ ] Validation des formulaires (annotations + messages)
-- [ ] Gestion des erreurs (404, validation)
+- [x] DTOs séparés des modèles (pas d'exposition directe des entités)
+- [x] Validation des formulaires (annotations + messages)
+- [x] Gestion des erreurs (404, validation) *(API — `GlobalExceptionHandler`)*
 - [ ] Code poussé sur GitHub (branche `main`)
-- [ ] Pas de credentials en dur dans le code source public
+- [x] Pas de credentials en dur dans le code source public
 
 ### Démonstration orale (si présentation)
 - [ ] Savoir expliquer le flux MVC
