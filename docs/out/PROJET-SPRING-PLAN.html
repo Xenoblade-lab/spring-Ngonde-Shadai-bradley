@@ -1,0 +1,1391 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Projet Spring - Gestion Candidats et Formations</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <style>
+    @page { margin: 1.6cm 1.8cm; size: A4; }
+    html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    body {
+      font-family: "Segoe UI", Calibri, Arial, sans-serif;
+      font-size: 10.5pt; line-height: 1.48; color: #1a1a2e;
+      max-width: 920px; margin: 0 auto; padding: 0 8px 16px; background: #fff;
+    }
+    h1 {
+      font-size: 1.45rem; font-weight: 700; color: #1e3a5f;
+      border-bottom: 3px solid #3d5a80; padding-bottom: 0.35em; margin: 0 0 0.9em;
+    }
+    h1 + p { color: #37474f; margin-bottom: 1em; border: none; background: none; padding: 0; }
+    h2 {
+      font-size: 1.1rem; font-weight: 700; color: #2c5282; margin-top: 1.25em;
+      border-left: 4px solid #3d5a80; padding: 0.35em 0 0.35em 0.55em;
+      background: linear-gradient(to right, #e8eef5, #fff);
+      page-break-after: avoid;
+    }
+    h3 { font-size: 1rem; font-weight: 600; color: #37474f; margin-top: 0.95em; page-break-after: avoid; }
+    p, li { color: #1a1a2e; }
+    strong { color: #1e3a5f; font-weight: 600; }
+    a { color: #1565c0; text-decoration: underline; }
+    hr { border: none; border-top: 1px solid #cfd8dc; margin: 1.1em 0; }
+    table { width: 100%; border-collapse: collapse; margin: 0.55em 0 1em; font-size: 8.5pt; page-break-inside: avoid; }
+    thead th, tr:first-child th {
+      background: #e8eef5; color: #1e3a5f; font-weight: 700;
+      border: 1px solid #90a4ae; padding: 0.4em 0.55em;
+    }
+    th, td { border: 1px solid #cfd8dc; padding: 0.35em 0.5em; color: #1a1a2e; background: #fff; }
+    tbody tr:nth-child(even) td { background: #f7f9fc; }
+    code {
+      font-family: Consolas, monospace; font-size: 9pt;
+      background: #f5f5f5; color: #263238; padding: 0.1em 0.35em;
+      border: 1px solid #e0e0e0; border-radius: 3px;
+    }
+    pre {
+      font-family: Consolas, monospace; font-size: 8.8pt; line-height: 1.42;
+      background: #f7f9fc; color: #263238; border: 1px solid #cfd8dc;
+      border-left: 4px solid #3d5a80; padding: 0.65em 0.85em; margin: 0.55em 0 0.85em;
+      page-break-inside: avoid;
+    }
+    pre code { background: transparent; border: none; padding: 0; color: inherit; }
+    blockquote { border-left: 4px solid #3d5a80; background: #f7f9fc; color: #37474f; padding: 0.55em 0.85em; }
+    ul, ol { margin: 0.35em 0 0.65em; }
+    li { margin: 0.15em 0; }
+  </style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Projet Spring - Gestion Candidats et Formations</h1>
+</header>
+<h1 id="projet-spring-gestion-candidats-formations">Projet Spring —
+Gestion Candidats &amp; Formations</h1>
+<p><strong>Étudiant :</strong> Ngonde Shadai Bradley<br />
+<strong>Compte GitHub :</strong> <a
+href="https://github.com/Xenoblade-lab/spring-Ngonde-Shadai-bradley">Xenoblade-lab/spring-Ngonde-Shadai-bradley</a><br />
+<strong>Branche :</strong> <code>main</code><br />
+<strong>Cours :</strong> Spring Framework — Module 01 (UPC)<br />
+<strong>Date :</strong> Juillet 2026</p>
+<hr />
+<h2 id="table-des-matières">Table des matières</h2>
+<ol type="1">
+<li><a href="#1-résumé-du-sujet">Résumé du sujet</a></li>
+<li><a href="#2-exigences-de-lexamen">Exigences de l’examen</a></li>
+<li><a href="#3-état-actuel-du-projet">État actuel du projet</a></li>
+<li><a href="#4-architecture-cible">Architecture cible</a></li>
+<li><a href="#5-modèle-de-données-mysql">Modèle de données
+(MySQL)</a></li>
+<li><a href="#6-structure-des-packages-et-fichiers">Structure des
+packages et fichiers</a></li>
+<li><a href="#7-plan-détaillé-par-phase">Plan détaillé par
+phase</a></li>
+<li><a href="#8-plan-de-travail--étapes-pas-à-pas">Plan de travail —
+étapes pas à pas</a></li>
+<li><a href="#9-spécifications-api-rest">Spécifications API
+REST</a></li>
+<li><a href="#10-spécifications-interface-web">Spécifications interface
+Web</a></li>
+<li><a href="#11-configuration-et-dépendances">Configuration et
+dépendances</a></li>
+<li><a href="#12-checklist-de-validation-finale">Checklist de validation
+finale</a></li>
+<li><a href="#13-estimation-du-temps">Estimation du temps</a></li>
+</ol>
+<hr />
+<h2 id="résumé-du-sujet">1. Résumé du sujet</h2>
+<h3 id="de-quoi-parle-lapplication">De quoi parle l’application ?</h3>
+<p>Application de <strong>gestion des inscriptions en formation
+professionnelle</strong>. Elle permet de :</p>
+<ul>
+<li>Enregistrer des <strong>professions</strong> (métiers visés)</li>
+<li>Gérer des <strong>candidats</strong> (personnes inscrites) liés à
+une profession</li>
+<li>Proposer des <strong>formations</strong> (programmes de cours)</li>
+<li>Associer candidats et formations via une table de liaison</li>
+</ul>
+<h3 id="cas-dusage-concret">Cas d’usage concret</h3>
+<blockquote>
+<p>Un centre de formation enregistre <strong>Bradley Ngonde</strong>,
+candidat visant la profession <strong>Informaticien</strong>, inscrit
+aux formations <strong>Spring Framework</strong> (3 mois) et
+<strong>MySQL avancé</strong> (2 mois).</p>
+</blockquote>
+<h3 id="entités-du-domaine">Entités du domaine</h3>
+<table>
+<colgroup>
+<col style="width: 26%" />
+<col style="width: 43%" />
+<col style="width: 30%" />
+</colgroup>
+<thead>
+<tr>
+<th>Entité</th>
+<th>Description</th>
+<th>Exemple</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Profession</code></td>
+<td>Métier / filière</td>
+<td>Informaticien, Comptable</td>
+</tr>
+<tr>
+<td><code>Candidat</code></td>
+<td>Personne inscrite</td>
+<td>Noms, genre, état civil, date/lieu naissance</td>
+</tr>
+<tr>
+<td><code>Formation</code></td>
+<td>Programme de cours</td>
+<td>Spring Framework, durée 3 mois</td>
+</tr>
+<tr>
+<td><code>CandidatFormation</code></td>
+<td>Inscription d’un candidat à une formation</td>
+<td>Bradley → Spring Framework</td>
+</tr>
+</tbody>
+</table>
+<h3 id="schéma-relationnel">Schéma relationnel</h3>
+<pre><code>┌─────────────┐       1     N  ┌─────────────┐
+│  Profession │◄───────────────│   Candidat  │
+└─────────────┘                └──────┬──────┘
+                                      │
+                                      │ N
+                                      ▼
+                              ┌───────────────────┐
+                              │ CandidatFormation │
+                              └─────────┬─────────┘
+                                        │ N
+                                        ▼
+                                ┌─────────────┐
+                                │  Formation  │
+                                └─────────────┘</code></pre>
+<hr />
+<h2 id="exigences-de-lexamen">2. Exigences de l’examen</h2>
+<p>Source :
+<code>docs/spring-projet-dispositions-pratiques-2025-26.pdf</code></p>
+<table>
+<colgroup>
+<col style="width: 8%" />
+<col style="width: 28%" />
+<col style="width: 62%" />
+</colgroup>
+<thead>
+<tr>
+<th>#</th>
+<th>Exigence</th>
+<th>Comment on la couvre</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Application <strong>Web</strong> &amp; <strong>API</strong></td>
+<td>Thymeleaf (pages HTML) + <code>@RestController</code> (JSON)</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Architecture <strong>3 couches</strong></td>
+<td><code>@Controller</code> / <code>@Service</code> /
+<code>@Repository</code></td>
+</tr>
+<tr>
+<td>3</td>
+<td>BDD <strong>≥ 3 tables</strong> + <strong>jointures</strong></td>
+<td>4 tables : <code>professions</code>, <code>candidats</code>,
+<code>formations</code>, <code>candidats_formations</code></td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>JdbcClient</strong> + <strong>simpleflatmapper</strong></td>
+<td>Repositories avec requêtes JOIN mappées via SFM</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>CRUD</strong> complet</td>
+<td>Create, Read, Update, Delete sur chaque entité principale</td>
+</tr>
+</tbody>
+</table>
+<h3 id="hors-scope-bonus-non-exigé-pour-la-note">Hors scope (bonus, non
+exigé pour la note)</h3>
+<ul>
+<li>Architecture multi-modules Maven (App-03 du cours)</li>
+<li>Spring Security / JWT</li>
+<li>Déploiement sur serveur externe</li>
+</ul>
+<hr />
+<h2 id="état-actuel-du-projet">3. État actuel du projet</h2>
+<h3 id="déjà-fait">Déjà fait ✅</h3>
+<table>
+<colgroup>
+<col style="width: 31%" />
+<col style="width: 41%" />
+<col style="width: 27%" />
+</colgroup>
+<thead>
+<tr>
+<th>Élément</th>
+<th>Fichier(s)</th>
+<th>Statut</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Projet Spring Boot 4 / Java 21</td>
+<td><code>pom.xml</code></td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Modèles POJO</td>
+<td><code>Candidat</code>, <code>Profession</code>,
+<code>Formation</code>, <code>CandidatFormation</code></td>
+<td>✅ (sans JPA)</td>
+</tr>
+<tr>
+<td>Formation — Repository</td>
+<td><code>FormationRepoCustom</code>, <code>FormationRepoImpl</code>
+(JdbcClient)</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Formation — Service</td>
+<td><code>FormationService</code>,
+<code>FormationServiceImpl</code></td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Formation — API REST</td>
+<td><code>FormationRestController</code></td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Formation — DTO</td>
+<td><code>FormationDto</code></td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Utilitaires</td>
+<td><code>Mapper</code>, <code>MyLibraryUtil</code></td>
+<td>✅ (partiel)</td>
+</tr>
+<tr>
+<td>Config BDD</td>
+<td><code>application.properties</code></td>
+<td>⚠️ partiel</td>
+</tr>
+</tbody>
+</table>
+<h3 id="à-faire">À faire ❌</h3>
+<table>
+<thead>
+<tr>
+<th>Élément</th>
+<th>Priorité</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Dépendance <code>simpleflatmapper</code></td>
+<td>🔴 Haute</td>
+</tr>
+<tr>
+<td>Script SQL (schéma + données test)</td>
+<td>🔴 Haute</td>
+</tr>
+<tr>
+<td>Repositories avec JOIN (SFM)</td>
+<td>🔴 Haute</td>
+</tr>
+<tr>
+<td>Profession — Service / API / Web</td>
+<td>🔴 Haute</td>
+</tr>
+<tr>
+<td>Candidat — Service / API / Web</td>
+<td>🔴 Haute</td>
+</tr>
+<tr>
+<td>CandidatFormation — Service / API / Web</td>
+<td>🟡 Moyenne</td>
+</tr>
+<tr>
+<td>DTOs manquants</td>
+<td>🔴 Haute</td>
+</tr>
+<tr>
+<td>Mappers complets</td>
+<td>🔴 Haute</td>
+</tr>
+<tr>
+<td>Controllers Web (<code>@Controller</code>)</td>
+<td>🔴 Haute</td>
+</tr>
+<tr>
+<td>Templates Thymeleaf</td>
+<td>🔴 Haute</td>
+</tr>
+<tr>
+<td>Internationalisation (FR/EN)</td>
+<td>🟡 Moyenne</td>
+</tr>
+<tr>
+<td>Gestion des exceptions</td>
+<td>🟡 Moyenne</td>
+</tr>
+<tr>
+<td>Barre de recherche</td>
+<td>🟢 Basse</td>
+</tr>
+<tr>
+<td>Profils dev/prod</td>
+<td>🟢 Basse</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="architecture-cible">4. Architecture cible</h2>
+<h3 id="flux-dune-requête-web">Flux d’une requête Web</h3>
+<pre><code>Navigateur
+    │
+    ▼
+@Controller  ──►  @Service  ──►  @Repository (JdbcClient + SFM)
+    │                  │                    │
+    │                  │                    ▼
+    │                  │               MySQL
+    ▼                  ▼
+ Thymeleaf          DTO / Mapper
+ (HTML)</code></pre>
+<h3 id="flux-dune-requête-api">Flux d’une requête API</h3>
+<pre><code>Postman / Client HTTP
+    │
+    ▼
+@RestController  ──►  @Service  ──►  @Repository
+    │
+    ▼
+ JSON (ResponseEntity)</code></pre>
+<h3 id="pattern-repository-comme-le-cours">Pattern Repository (comme le
+cours)</h3>
+<p>Pour chaque entité principale :</p>
+<pre><code>XxxRepoCustom.java     → interface (contrat)
+XxxRepoImpl.java       → @Repository (JdbcClient + simpleflatmapper)</code></pre>
+<blockquote>
+<p>Note : on n’utilise <strong>pas</strong> JpaRepository pour le CRUD
+principal. JdbcClient + SFM est l’approche exigée par le prof.</p>
+</blockquote>
+<hr />
+<h2 id="modèle-de-données-mysql">5. Modèle de données (MySQL)</h2>
+<h3 id="script-sql-à-créer-docssqlschema.sql">Script SQL à créer :
+<code>docs/sql/schema.sql</code></h3>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode sql"><code class="sourceCode sql"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">DATABASE</span> <span class="cf">IF</span> <span class="kw">NOT</span> <span class="kw">EXISTS</span> demo_lmd_2526_01</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">CHARACTER</span> <span class="kw">SET</span> utf8mb4 COLLATE utf8mb4_unicode_ci;</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="kw">USE</span> demo_lmd_2526_01;</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co">-- Table 1 : Professions</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> professions (</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">id</span>          BIGINT AUTO_INCREMENT <span class="kw">PRIMARY</span> <span class="kw">KEY</span>,</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    description <span class="dt">VARCHAR</span>(<span class="dv">45</span>) <span class="kw">NOT</span> <span class="kw">NULL</span>,</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">UNIQUE</span> <span class="kw">KEY</span> uk_professions_description (description)</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>);</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="co">-- Table 2 : Formations</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> formations (</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    <span class="kw">id</span>          BIGINT AUTO_INCREMENT <span class="kw">PRIMARY</span> <span class="kw">KEY</span>,</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    description <span class="dt">VARCHAR</span>(<span class="dv">45</span>) <span class="kw">NOT</span> <span class="kw">NULL</span>,</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    duree       <span class="dt">INT</span> <span class="kw">NOT</span> <span class="kw">NULL</span>,</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>    <span class="kw">UNIQUE</span> <span class="kw">KEY</span> uk_formations_description (description)</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>);</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="co">-- Table 3 : Candidats</span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> candidats (</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>    <span class="kw">id</span>           BIGINT AUTO_INCREMENT <span class="kw">PRIMARY</span> <span class="kw">KEY</span>,</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>    profession_pk BIGINT <span class="kw">NOT</span> <span class="kw">NULL</span>,</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>    noms         <span class="dt">VARCHAR</span>(<span class="dv">100</span>) <span class="kw">NOT</span> <span class="kw">NULL</span>,</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>    genre        <span class="dt">CHAR</span>(<span class="dv">1</span>) <span class="kw">NOT</span> <span class="kw">NULL</span>,          <span class="co">-- M / F</span></span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>    etat_civil   <span class="dt">VARCHAR</span>(<span class="dv">20</span>) <span class="kw">NOT</span> <span class="kw">NULL</span>,</span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>    lieu_nais    <span class="dt">VARCHAR</span>(<span class="dv">45</span>) <span class="kw">NOT</span> <span class="kw">NULL</span>,</span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>    date_nais    <span class="dt">DATE</span> <span class="kw">NOT</span> <span class="kw">NULL</span>,</span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>    <span class="kw">CONSTRAINT</span> fk_candidats_profession</span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>        <span class="kw">FOREIGN</span> <span class="kw">KEY</span> (profession_pk) <span class="kw">REFERENCES</span> professions(<span class="kw">id</span>)</span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>);</span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a><span class="co">-- Table 4 : Liaison candidat ↔ formation</span></span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> candidats_formations (</span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>    <span class="kw">id</span>           BIGINT AUTO_INCREMENT <span class="kw">PRIMARY</span> <span class="kw">KEY</span>,</span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>    candidat_pk  BIGINT <span class="kw">NOT</span> <span class="kw">NULL</span>,</span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>    formation_pk BIGINT <span class="kw">NOT</span> <span class="kw">NULL</span>,</span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>    <span class="kw">CONSTRAINT</span> fk_cf_candidat</span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>        <span class="kw">FOREIGN</span> <span class="kw">KEY</span> (candidat_pk) <span class="kw">REFERENCES</span> candidats(<span class="kw">id</span>),</span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a>    <span class="kw">CONSTRAINT</span> fk_cf_formation</span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a>        <span class="kw">FOREIGN</span> <span class="kw">KEY</span> (formation_pk) <span class="kw">REFERENCES</span> formations(<span class="kw">id</span>),</span>
+<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a>    <span class="kw">UNIQUE</span> <span class="kw">KEY</span> uk_candidat_formation (candidat_pk, formation_pk)</span>
+<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a>);</span>
+<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a><span class="co">-- Index</span></span>
+<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">INDEX</span> idx_candidats_profession <span class="kw">ON</span> candidats(profession_pk);</span>
+<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">INDEX</span> idx_cf_candidat <span class="kw">ON</span> candidats_formations(candidat_pk);</span>
+<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">INDEX</span> idx_cf_formation <span class="kw">ON</span> candidats_formations(formation_pk);</span></code></pre></div>
+<h3 id="données-de-test-docssqldata.sql">Données de test :
+<code>docs/sql/data.sql</code></h3>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode sql"><code class="sourceCode sql"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> professions (description) <span class="kw">VALUES</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>(<span class="st">&#39;Informaticien&#39;</span>), (<span class="st">&#39;Comptable&#39;</span>), (<span class="st">&#39;Infirmier&#39;</span>);</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> formations (description, duree) <span class="kw">VALUES</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>(<span class="st">&#39;Spring Framework&#39;</span>, <span class="dv">3</span>), (<span class="st">&#39;MySQL avancé&#39;</span>, <span class="dv">2</span>), (<span class="st">&#39;Comptabilité générale&#39;</span>, <span class="dv">6</span>);</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> candidats (profession_pk, noms, genre, etat_civil, lieu_nais, date_nais) <span class="kw">VALUES</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>(<span class="dv">1</span>, <span class="st">&#39;Ngonde Shadai Bradley&#39;</span>, <span class="st">&#39;M&#39;</span>, <span class="st">&#39;Célibataire&#39;</span>, <span class="st">&#39;Kinshasa&#39;</span>, <span class="st">&#39;2000-05-15&#39;</span>),</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>(<span class="dv">2</span>, <span class="st">&#39;Mbuyi Grace&#39;</span>, <span class="st">&#39;F&#39;</span>, <span class="st">&#39;Mariée&#39;</span>, <span class="st">&#39;Lubumbashi&#39;</span>, <span class="st">&#39;1998-11-20&#39;</span>);</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> candidats_formations (candidat_pk, formation_pk) <span class="kw">VALUES</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>(<span class="dv">1</span>, <span class="dv">1</span>), (<span class="dv">1</span>, <span class="dv">2</span>), (<span class="dv">2</span>, <span class="dv">3</span>);</span></code></pre></div>
+<h3 id="requêtes-avec-jointures-exemples-clés">Requêtes avec jointures
+(exemples clés)</h3>
+<p><strong>Candidat + Profession :</strong></p>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode sql"><code class="sourceCode sql"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> c.<span class="op">*</span>, p.<span class="kw">id</span> <span class="kw">AS</span> profession_id, p.description <span class="kw">AS</span> profession_description</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> candidats c</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> professions p <span class="kw">ON</span> c.profession_pk <span class="op">=</span> p.<span class="kw">id</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> c.noms;</span></code></pre></div>
+<p><strong>Candidat + Formations :</strong></p>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode sql"><code class="sourceCode sql"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> c.<span class="op">*</span>, f.<span class="kw">id</span> <span class="kw">AS</span> formation_id, f.description <span class="kw">AS</span> formation_description, f.duree</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> candidats c</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> candidats_formations cf <span class="kw">ON</span> c.<span class="kw">id</span> <span class="op">=</span> cf.candidat_pk</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="kw">INNER</span> <span class="kw">JOIN</span> formations f <span class="kw">ON</span> cf.formation_pk <span class="op">=</span> f.<span class="kw">id</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> c.<span class="kw">id</span> <span class="op">=</span> ?</span></code></pre></div>
+<blockquote>
+<p>Ces requêtes seront implémentées dans les <code>@Repository</code>
+avec <strong>simpleflatmapper</strong> pour mapper automatiquement les
+objets imbriqués.</p>
+</blockquote>
+<hr />
+<h2 id="structure-des-packages-et-fichiers">6. Structure des packages et
+fichiers</h2>
+<pre><code>src/main/java/edu/upc/
+├── DemoUpc252602Application.java
+├── config/
+│   └── AppConfig.java                    ← i18n, LocaleResolver, intercepteur langue
+├── controllers/
+│   ├── ProfessionController.java         ← Web Thymeleaf
+│   ├── CandidatController.java
+│   ├── FormationController.java
+│   ├── CandidatFormationController.java
+│   ├── HomeController.java               ← page d&#39;accueil
+│   └── api/
+│       ├── ProfessionRestController.java
+│       ├── CandidatRestController.java
+│       ├── FormationRestController.java  ← ✅ existe
+│       └── CandidatFormationRestController.java
+├── services/
+│   ├── ProfessionService.java + Impl
+│   ├── CandidatService.java + Impl
+│   ├── FormationService.java + Impl      ← ✅ existe
+│   └── CandidatFormationService.java + Impl
+├── repositories/
+│   ├── ProfessionRepoCustom.java + Impl
+│   ├── CandidatRepoCustom.java + Impl    ← requêtes JOIN ici
+│   ├── FormationRepoCustom.java + Impl   ← ✅ existe (à migrer SFM)
+│   └── CandidatFormationRepoCustom.java + Impl
+├── models/
+│   ├── Profession.java
+│   ├── Candidat.java                     ← ajouter champ Profession profession
+│   ├── Formation.java
+│   ├── CandidatFormation.java
+│   └── dtos/
+│       ├── ProfessionDto.java
+│       ├── CandidatDto.java
+│       ├── FormationDto.java             ← ✅ existe
+│       └── CandidatFormationDto.java
+└── utils/
+    ├── Mapper.java                       ← étendre pour toutes les entités
+    ├── MyLibraryUtil.java
+    ├── MyDateUtils.java                  ← conversion String ↔ Date
+    └── exceptions/
+        ├── NotFoundException.java
+        └── GlobalExceptionHandler.java   ← @ControllerAdvice + @RestControllerAdvice
+
+src/main/resources/
+├── application.properties
+├── application-dev.properties
+├── Bundle.properties                     ← messages EN
+├── Bundle_fr.properties                  ← messages FR
+├── static/
+│   └── css/
+│       ├── bootstrap.min.css
+│       └── app.css
+└── templates/
+    ├── layout.html                       ← layout Thymeleaf (optionnel)
+    ├── index.html                        ← accueil
+    ├── professions-view.html
+    ├── professions-form.html
+    ├── candidats-view.html
+    ├── candidats-form.html
+    ├── formations-view.html
+    ├── formations-form.html
+    └── candidats-formations-view.html</code></pre>
+<hr />
+<h2 id="plan-détaillé-par-phase">7. Plan détaillé par phase</h2>
+<h3 id="phase-0-préparation-jour-1-1h">Phase 0 — Préparation (Jour 1,
+~1h)</h3>
+<p><strong>Objectif :</strong> Environnement prêt, BDD créée,
+dépendances ajoutées.</p>
+<ul class="task-list">
+<li><label><input type="checkbox" />Vérifier Java 21, Maven, MySQL
+(Laragon port 3307)</label></li>
+<li><label><input type="checkbox" />Exécuter
+<code>docs/sql/schema.sql</code> et
+<code>docs/sql/data.sql</code></label></li>
+<li><label><input type="checkbox" />Ajouter
+<code>simpleflatmapper</code> et <code>spring-boot-starter-jdbc</code>
+au <code>pom.xml</code></label></li>
+<li><label><input type="checkbox" />Compléter
+<code>application.properties</code> (port, dialect,
+profils)</label></li>
+<li><label><input type="checkbox" />Vérifier que l’app démarre :
+<code>./mvnw spring-boot:run</code></label></li>
+</ul>
+<hr />
+<h3 id="phase-1-couche-data-repositories-jour-12-4h">Phase 1 — Couche
+Data / Repositories (Jour 1–2, ~4h)</h3>
+<p><strong>Objectif :</strong> Tous les <code>@Repository</code>
+fonctionnels avec JdbcClient + simpleflatmapper.</p>
+<h4 id="profession">1.1 Profession</h4>
+<ul>
+<li>Interface <code>ProfessionRepoCustom</code> : <code>create</code>,
+<code>update</code>, <code>delete</code>, <code>getById</code>,
+<code>get</code></li>
+<li>Impl <code>ProfessionRepoImpl</code> avec JdbcClient</li>
+</ul>
+<h4 id="formation-refactoring">1.2 Formation (refactoring)</h4>
+<ul>
+<li>Migrer <code>FormationRepoImpl</code> pour utiliser
+<strong>simpleflatmapper</strong> au lieu du mapping natif
+JdbcClient</li>
+<li>Garder les mêmes méthodes CRUD</li>
+</ul>
+<h4 id="candidat-avec-jointures">1.3 Candidat (avec jointures)</h4>
+<ul>
+<li>Interface <code>CandidatRepoCustom</code> : CRUD +
+<code>getWithProfession()</code>, <code>getWithFormations(id)</code>,
+<code>search(keyword)</code></li>
+<li>Impl avec requête JOIN candidats ↔︎ professions via SFM</li>
+<li>Modèle enrichi : <code>Candidat</code> contient un objet
+<code>Profession</code> (pour le mapping SFM)</li>
+</ul>
+<h4 id="candidatformation">1.4 CandidatFormation</h4>
+<ul>
+<li>CRUD pour associer / dissocier candidat ↔︎ formation</li>
+<li>Requête JOIN pour lister les inscriptions avec noms candidat +
+formation</li>
+</ul>
+<hr />
+<h3 id="phase-2-couche-service-dtos-jour-2-3h">Phase 2 — Couche Service
++ DTOs (Jour 2, ~3h)</h3>
+<p><strong>Objectif :</strong> Logique métier et validation.</p>
+<ul class="task-list">
+<li><label><input type="checkbox" />Créer tous les DTOs avec annotations
+<code>@NotBlank</code>, <code>@Size</code>, <code>@Positive</code>,
+etc.</label></li>
+<li><label><input type="checkbox" />Étendre <code>Mapper</code> pour
+toutes les entités</label></li>
+<li><label><input type="checkbox" />Créer <code>ProfessionService</code>
++ <code>ProfessionServiceImpl</code></label></li>
+<li><label><input type="checkbox" />Créer <code>CandidatService</code> +
+<code>CandidatServiceImpl</code></label></li>
+<li><label><input type="checkbox" />Créer
+<code>CandidatFormationService</code> +
+<code>CandidatFormationServiceImpl</code></label></li>
+<li><label><input type="checkbox" />Ajouter <code>@Transactional</code>
+sur create/update/delete</label></li>
+<li><label><input type="checkbox" />Créer exceptions
+<code>NotFoundException</code> + handler global</label></li>
+</ul>
+<hr />
+<h3 id="phase-3-api-rest-jour-23-2h">Phase 3 — API REST (Jour 2–3,
+~2h)</h3>
+<p><strong>Objectif :</strong> Tous les endpoints JSON testables avec
+Postman.</p>
+<table>
+<thead>
+<tr>
+<th>Méthode</th>
+<th>Endpoint</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GET</td>
+<td><code>/api/professions</code></td>
+<td>Liste</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/api/professions/{id}</code></td>
+<td>Détail</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/api/professions</code></td>
+<td>Créer</td>
+</tr>
+<tr>
+<td>PUT</td>
+<td><code>/api/professions/{id}</code></td>
+<td>Modifier</td>
+</tr>
+<tr>
+<td>DELETE</td>
+<td><code>/api/professions/{id}</code></td>
+<td>Supprimer</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/api/candidats</code></td>
+<td>Liste (avec profession)</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/api/candidats/{id}</code></td>
+<td>Détail + formations</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/api/candidats</code></td>
+<td>Créer</td>
+</tr>
+<tr>
+<td>PUT</td>
+<td><code>/api/candidats/{id}</code></td>
+<td>Modifier</td>
+</tr>
+<tr>
+<td>DELETE</td>
+<td><code>/api/candidats/{id}</code></td>
+<td>Supprimer</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/api/formations</code></td>
+<td>Liste</td>
+</tr>
+<tr>
+<td>…</td>
+<td>…</td>
+<td>(déjà partiellement fait)</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/api/candidats-formations</code></td>
+<td>Liste inscriptions</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/api/candidats-formations</code></td>
+<td>Inscrire candidat</td>
+</tr>
+<tr>
+<td>DELETE</td>
+<td><code>/api/candidats-formations/{id}</code></td>
+<td>Désinscrire</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="phase-4-interface-web-thymeleaf-jour-34-5h">Phase 4 — Interface
+Web Thymeleaf (Jour 3–4, ~5h)</h3>
+<p><strong>Objectif :</strong> Application navigable dans le
+navigateur.</p>
+<h4 id="configuration">4.1 Configuration</h4>
+<ul class="task-list">
+<li><label><input type="checkbox" /><code>AppConfig</code> :
+MessageSource, LocaleResolver, intercepteur
+<code>?locale=fr|en</code></label></li>
+<li><label><input type="checkbox" />Fichiers
+<code>Bundle.properties</code> /
+<code>Bundle_fr.properties</code></label></li>
+<li><label><input type="checkbox" />Bootstrap CSS dans
+<code>static/css/</code></label></li>
+</ul>
+<h4 id="pages-par-entité-pattern-identique-pour-chaque">4.2 Pages par
+entité (pattern identique pour chaque)</h4>
+<ul>
+<li><strong>Vue liste</strong> (<code>xxx-view.html</code>) : tableau +
+boutons Ajouter / Éditer / Supprimer + recherche</li>
+<li><strong>Formulaire</strong> (<code>xxx-form.html</code>) : champs
+validés + messages d’erreur</li>
+</ul>
+<h4 id="controllers-web">4.3 Controllers Web</h4>
+<ul>
+<li><code>@Controller</code> avec mappings :
+<ul>
+<li><code>GET /professions</code> → liste</li>
+<li><code>GET /professions/create</code> → formulaire vide</li>
+<li><code>GET /professions/{id}/edit</code> → formulaire pré-rempli</li>
+<li><code>POST /professions/save</code> → enregistrer</li>
+<li><code>GET /professions/{id}/delete</code> → supprimer</li>
+</ul></li>
+<li>Répéter pour Candidat, Formation, CandidatFormation</li>
+</ul>
+<h4 id="page-daccueil">4.4 Page d’accueil</h4>
+<ul>
+<li><code>GET /</code> → dashboard avec liens vers chaque module</li>
+</ul>
+<hr />
+<h3 id="phase-5-finitions-jour-45-2h">Phase 5 — Finitions (Jour 4–5,
+~2h)</h3>
+<p><strong>Objectif :</strong> Qualité et conformité examen.</p>
+<ul class="task-list">
+<li><label><input type="checkbox" />Barre de recherche sur candidats
+(paramètre <code>keyword</code>)</label></li>
+<li><label><input type="checkbox" />Messages flash de confirmation
+(succès / erreur)</label></li>
+<li><label><input type="checkbox" />Gestion des erreurs (404,
+validation)</label></li>
+<li><label><input type="checkbox" />Tests manuels Postman (collection
+exportée)</label></li>
+<li><label><input type="checkbox" />Tests manuels navigateur (tous les
+CRUD)</label></li>
+<li><label><input type="checkbox" />Commit + push sur
+GitHub</label></li>
+<li><label><input type="checkbox" />Relire checklist finale (section
+12)</label></li>
+</ul>
+<hr />
+<h2 id="plan-de-travail-étapes-pas-à-pas">8. Plan de travail — étapes
+pas à pas</h2>
+<blockquote>
+<p>Cocher chaque étape au fur et à mesure. Ordre strict recommandé.</p>
+</blockquote>
+<h3 id="étape-1-base-de-données">Étape 1 — Base de données</h3>
+<ul class="task-list">
+<li><label><input type="checkbox" /><strong>1.1</strong> Créer le
+fichier <code>docs/sql/schema.sql</code></label></li>
+<li><label><input type="checkbox" /><strong>1.2</strong> Créer le
+fichier <code>docs/sql/data.sql</code></label></li>
+<li><label><input type="checkbox" /><strong>1.3</strong> Exécuter les
+scripts dans MySQL (HeidiSQL / Laragon)</label></li>
+<li><label><input type="checkbox" /><strong>1.4</strong> Vérifier les 4
+tables et les données de test</label></li>
+</ul>
+<h3 id="étape-2-dépendances-maven">Étape 2 — Dépendances Maven</h3>
+<ul class="task-list">
+<li><label><input type="checkbox" /><strong>2.1</strong> Ajouter
+<code>simpleflatmapper-jdbc</code> dans
+<code>pom.xml</code></label></li>
+<li><label><input type="checkbox" /><strong>2.2</strong> Ajouter
+<code>spring-boot-starter-jdbc</code> si absent</label></li>
+<li><label><input type="checkbox" /><strong>2.3</strong> Lancer
+<code>./mvnw clean compile</code> sans erreur</label></li>
+</ul>
+<h3 id="étape-3-configuration-spring">Étape 3 — Configuration
+Spring</h3>
+<ul class="task-list">
+<li><label><input type="checkbox" /><strong>3.1</strong> Compléter
+<code>application.properties</code> (URL BDD, port 8081,
+logging)</label></li>
+<li><label><input type="checkbox" /><strong>3.2</strong> Créer
+<code>application-dev.properties</code></label></li>
+<li><label><input type="checkbox" /><strong>3.3</strong> Configurer
+<code>spring.profiles.active=dev</code></label></li>
+</ul>
+<h3 id="étape-4-modèles-et-dtos">Étape 4 — Modèles et DTOs</h3>
+<ul class="task-list">
+<li><label><input type="checkbox" /><strong>4.1</strong> Enrichir
+<code>Candidat</code> avec champ <code>Profession profession</code>
+(pour SFM)</label></li>
+<li><label><input type="checkbox" /><strong>4.2</strong> Créer
+<code>ProfessionDto</code></label></li>
+<li><label><input type="checkbox" /><strong>4.3</strong> Créer
+<code>CandidatDto</code></label></li>
+<li><label><input type="checkbox" /><strong>4.4</strong> Créer
+<code>CandidatFormationDto</code></label></li>
+<li><label><input type="checkbox" /><strong>4.5</strong> Étendre
+<code>Mapper</code> pour toutes les conversions</label></li>
+</ul>
+<h3 id="étape-5-repository-profession">Étape 5 — Repository
+Profession</h3>
+<ul class="task-list">
+<li><label><input type="checkbox" /><strong>5.1</strong> Créer
+<code>ProfessionRepoCustom.java</code></label></li>
+<li><label><input type="checkbox" /><strong>5.2</strong> Créer
+<code>ProfessionRepoImpl.java</code> (JdbcClient)</label></li>
+<li><label><input type="checkbox" /><strong>5.3</strong> Tester
+manuellement via un <code>@SpringBootTest</code> ou log
+temporaire</label></li>
+</ul>
+<h3 id="étape-6-repository-formation-migration-sfm">Étape 6 — Repository
+Formation (migration SFM)</h3>
+<ul class="task-list">
+<li><label><input type="checkbox" /><strong>6.1</strong> Configurer
+<code>JdbcMapper</code> / <code>ResultSetExtractor</code> avec
+simpleflatmapper</label></li>
+<li><label><input type="checkbox" /><strong>6.2</strong> Refactorer
+<code>FormationRepoImpl</code> pour utiliser SFM</label></li>
+<li><label><input type="checkbox" /><strong>6.3</strong> Vérifier que
+l’API Formation existante fonctionne toujours</label></li>
+</ul>
+<h3 id="étape-7-repository-candidat-jointures">Étape 7 — Repository
+Candidat (jointures)</h3>
+<ul class="task-list">
+<li><label><input type="checkbox" /><strong>7.1</strong> Créer
+<code>CandidatRepoCustom.java</code> (CRUD +
+<code>getWithProfession</code> + <code>search</code>)</label></li>
+<li><label><input type="checkbox" /><strong>7.2</strong> Créer
+<code>CandidatRepoImpl.java</code> avec requête JOIN + SFM</label></li>
+<li><label><input type="checkbox" /><strong>7.3</strong> Tester la
+récupération candidat + profession</label></li>
+</ul>
+<h3 id="étape-8-repository-candidatformation">Étape 8 — Repository
+CandidatFormation</h3>
+<ul class="task-list">
+<li><label><input type="checkbox" /><strong>8.1</strong> Créer
+<code>CandidatFormationRepoCustom.java</code></label></li>
+<li><label><input type="checkbox" /><strong>8.2</strong> Créer
+<code>CandidatFormationRepoImpl.java</code> avec JOIN</label></li>
+<li><label><input type="checkbox" /><strong>8.3</strong> Tester
+inscription / désinscription</label></li>
+</ul>
+<h3 id="étape-9-services">Étape 9 — Services</h3>
+<ul class="task-list">
+<li><label><input type="checkbox" /><strong>9.1</strong>
+<code>ProfessionService</code> +
+<code>ProfessionServiceImpl</code></label></li>
+<li><label><input type="checkbox" /><strong>9.2</strong>
+<code>CandidatService</code> +
+<code>CandidatServiceImpl</code></label></li>
+<li><label><input type="checkbox" /><strong>9.3</strong> Vérifier
+<code>FormationService</code> (déjà existant)</label></li>
+<li><label><input type="checkbox" /><strong>9.4</strong>
+<code>CandidatFormationService</code> +
+<code>CandidatFormationServiceImpl</code></label></li>
+<li><label><input type="checkbox" /><strong>9.5</strong> Créer
+<code>NotFoundException</code> +
+<code>GlobalExceptionHandler</code></label></li>
+</ul>
+<h3 id="étape-10-api-rest">Étape 10 — API REST</h3>
+<ul class="task-list">
+<li><label><input type="checkbox" /><strong>10.1</strong>
+<code>ProfessionRestController</code> (CRUD complet)</label></li>
+<li><label><input type="checkbox" /><strong>10.2</strong>
+<code>CandidatRestController</code> (CRUD + liste avec
+profession)</label></li>
+<li><label><input type="checkbox" /><strong>10.3</strong> Vérifier
+<code>FormationRestController</code> (existant)</label></li>
+<li><label><input type="checkbox" /><strong>10.4</strong>
+<code>CandidatFormationRestController</code></label></li>
+<li><label><input type="checkbox" /><strong>10.5</strong> Tester tous
+les endpoints avec Postman</label></li>
+</ul>
+<h3 id="étape-11-internationalisation">Étape 11 —
+Internationalisation</h3>
+<ul class="task-list">
+<li><label><input type="checkbox" /><strong>11.1</strong> Créer
+<code>AppConfig.java</code> (MessageSource, LocaleResolver)</label></li>
+<li><label><input type="checkbox" /><strong>11.2</strong> Créer
+<code>Bundle.properties</code> et
+<code>Bundle_fr.properties</code></label></li>
+<li><label><input type="checkbox" /><strong>11.3</strong> Tester
+<code>http://localhost:8081/?locale=fr</code></label></li>
+</ul>
+<h3 id="étape-12-interface-web-profession">Étape 12 — Interface Web —
+Profession</h3>
+<ul class="task-list">
+<li><label><input type="checkbox" /><strong>12.1</strong>
+<code>ProfessionController.java</code></label></li>
+<li><label><input type="checkbox" /><strong>12.2</strong>
+<code>professions-view.html</code></label></li>
+<li><label><input type="checkbox" /><strong>12.3</strong>
+<code>professions-form.html</code></label></li>
+<li><label><input type="checkbox" /><strong>12.4</strong> Tester CRUD
+complet dans le navigateur</label></li>
+</ul>
+<h3 id="étape-13-interface-web-formation">Étape 13 — Interface Web —
+Formation</h3>
+<ul class="task-list">
+<li><label><input type="checkbox" /><strong>13.1</strong>
+<code>FormationController.java</code></label></li>
+<li><label><input type="checkbox" /><strong>13.2</strong>
+<code>formations-view.html</code></label></li>
+<li><label><input type="checkbox" /><strong>13.3</strong>
+<code>formations-form.html</code></label></li>
+<li><label><input type="checkbox" /><strong>13.4</strong> Tester CRUD
+complet</label></li>
+</ul>
+<h3 id="étape-14-interface-web-candidat">Étape 14 — Interface Web —
+Candidat</h3>
+<ul class="task-list">
+<li><label><input type="checkbox" /><strong>14.1</strong>
+<code>CandidatController.java</code></label></li>
+<li><label><input type="checkbox" /><strong>14.2</strong>
+<code>candidats-view.html</code> (afficher profession via
+jointure)</label></li>
+<li><label><input type="checkbox" /><strong>14.3</strong>
+<code>candidats-form.html</code> (select profession)</label></li>
+<li><label><input type="checkbox" /><strong>14.4</strong> Barre de
+recherche par nom</label></li>
+<li><label><input type="checkbox" /><strong>14.5</strong> Tester CRUD
+complet</label></li>
+</ul>
+<h3 id="étape-15-interface-web-candidatformation">Étape 15 — Interface
+Web — CandidatFormation</h3>
+<ul class="task-list">
+<li><label><input type="checkbox" /><strong>15.1</strong>
+<code>CandidatFormationController.java</code></label></li>
+<li><label><input type="checkbox" /><strong>15.2</strong> Page liste des
+inscriptions</label></li>
+<li><label><input type="checkbox" /><strong>15.3</strong> Formulaire
+d’inscription (select candidat + formation)</label></li>
+<li><label><input type="checkbox" /><strong>15.4</strong> Tester ajout /
+suppression</label></li>
+</ul>
+<h3 id="étape-16-accueil-et-finitions">Étape 16 — Accueil et
+finitions</h3>
+<ul class="task-list">
+<li><label><input type="checkbox" /><strong>16.1</strong>
+<code>HomeController</code> + <code>index.html</code> (menu
+navigation)</label></li>
+<li><label><input type="checkbox" /><strong>16.2</strong> CSS Bootstrap
++ <code>app.css</code></label></li>
+<li><label><input type="checkbox" /><strong>16.3</strong> Messages flash
+(succès / erreur)</label></li>
+<li><label><input type="checkbox" /><strong>16.4</strong> Revue complète
+checklist section 12</label></li>
+<li><label><input type="checkbox" /><strong>16.5</strong> Commit final +
+push GitHub</label></li>
+</ul>
+<hr />
+<h2 id="spécifications-api-rest">9. Spécifications API REST</h2>
+<h3 id="format-de-réponse">Format de réponse</h3>
+<p>Succès :</p>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="er">HTTP</span> <span class="dv">200</span> <span class="er">OK</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span> <span class="dt">&quot;id&quot;</span><span class="fu">:</span> <span class="dv">1</span><span class="fu">,</span> <span class="dt">&quot;description&quot;</span><span class="fu">:</span> <span class="st">&quot;Spring Framework&quot;</span><span class="fu">,</span> <span class="dt">&quot;duree&quot;</span><span class="fu">:</span> <span class="dv">3</span> <span class="fu">}</span></span></code></pre></div>
+<p>Création :</p>
+<div class="sourceCode" id="cb11"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="er">HTTP</span> <span class="dv">201</span> <span class="er">CREATED</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span> <span class="dt">&quot;id&quot;</span><span class="fu">:</span> <span class="dv">4</span><span class="fu">,</span> <span class="dt">&quot;description&quot;</span><span class="fu">:</span> <span class="st">&quot;Angular&quot;</span><span class="fu">,</span> <span class="dt">&quot;duree&quot;</span><span class="fu">:</span> <span class="dv">2</span> <span class="fu">}</span></span></code></pre></div>
+<p>Erreur validation :</p>
+<div class="sourceCode" id="cb12"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="er">HTTP</span> <span class="dv">400</span> <span class="er">BAD</span> <span class="er">REQUEST</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span> <span class="dt">&quot;message&quot;</span><span class="fu">:</span> <span class="st">&quot;Description invalide, Duree invalide&quot;</span> <span class="fu">}</span></span></code></pre></div>
+<h3 id="exemple-postman-créer-une-formation">Exemple Postman — Créer une
+formation</h3>
+<pre><code>POST http://localhost:8081/api/formations
+Content-Type: application/json
+
+{
+  &quot;description&quot;: &quot;Angular&quot;,
+  &quot;duree&quot;: 2
+}</code></pre>
+<h3 id="exemple-postman-lister-candidats-avec-profession">Exemple
+Postman — Lister candidats avec profession</h3>
+<pre><code>GET http://localhost:8081/api/candidats</code></pre>
+<p>Réponse attendue :</p>
+<div class="sourceCode" id="cb15"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="ot">[</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">{</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;id&quot;</span><span class="fu">:</span> <span class="dv">1</span><span class="fu">,</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;noms&quot;</span><span class="fu">:</span> <span class="st">&quot;Ngonde Shadai Bradley&quot;</span><span class="fu">,</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;genre&quot;</span><span class="fu">:</span> <span class="st">&quot;M&quot;</span><span class="fu">,</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;profession&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;id&quot;</span><span class="fu">:</span> <span class="dv">1</span><span class="fu">,</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;description&quot;</span><span class="fu">:</span> <span class="st">&quot;Informaticien&quot;</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a><span class="ot">]</span></span></code></pre></div>
+<hr />
+<h2 id="spécifications-interface-web">10. Spécifications interface
+Web</h2>
+<h3 id="navigation">Navigation</h3>
+<pre><code>Accueil (/)
+├── Professions (/professions)
+├── Candidats (/candidats)
+├── Formations (/formations)
+└── Inscriptions (/candidats-formations)</code></pre>
+<h3 id="pattern-page-liste">Pattern page liste</h3>
+<ul>
+<li>Tableau Bootstrap avec colonnes pertinentes</li>
+<li>Bouton <strong>Nouveau</strong> → formulaire création</li>
+<li>Colonne <strong>Actions</strong> : Éditer | Supprimer</li>
+<li>Champ <strong>Recherche</strong> (sur candidats minimum)</li>
+<li>Lien <strong>FR | EN</strong> dans le header</li>
+</ul>
+<h3 id="pattern-formulaire">Pattern formulaire</h3>
+<ul>
+<li>Champs avec validation côté serveur</li>
+<li>Affichage des erreurs sous chaque champ
+(<code>th:errors</code>)</li>
+<li>Boutons <strong>Enregistrer</strong> et
+<strong>Annuler</strong></li>
+<li>Select pour les clés étrangères (profession, candidat,
+formation)</li>
+</ul>
+<hr />
+<h2 id="configuration-et-dépendances">11. Configuration et
+dépendances</h2>
+<h3 id="dépendance-simpleflatmapper-à-ajouter">Dépendance
+simpleflatmapper à ajouter</h3>
+<div class="sourceCode" id="cb17"><pre
+class="sourceCode xml"><code class="sourceCode xml"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">dependency</span>&gt;</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">groupId</span>&gt;org.simpleflatmapper&lt;/<span class="kw">groupId</span>&gt;</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">artifactId</span>&gt;sfm-springjdbc&lt;/<span class="kw">artifactId</span>&gt;</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">version</span>&gt;8.2.3&lt;/<span class="kw">version</span>&gt;</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>&lt;/<span class="kw">dependency</span>&gt;</span></code></pre></div>
+<h3 id="application.properties-cible">application.properties cible</h3>
+<pre class="properties"><code>spring.application.name=spring-Ngonde-Shadai-bradley
+spring.profiles.active=dev
+server.port=8081</code></pre>
+<h3 id="application-dev.properties-cible">application-dev.properties
+cible</h3>
+<pre class="properties"><code>spring.datasource.url=jdbc:mysql://localhost:3307/demo_lmd_2526_01?useSSL=false&amp;allowPublicKeyRetrieval=true
+spring.datasource.username=root
+spring.datasource.password=
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+logging.level.edu.upc=DEBUG</code></pre>
+<hr />
+<h2 id="checklist-de-validation-finale">12. Checklist de validation
+finale</h2>
+<p>Avant de rendre le projet, vérifier :</p>
+<h3 id="exigences-examen">Exigences examen</h3>
+<ul class="task-list">
+<li><label><input type="checkbox" />L’application démarre sans erreur
+(<code>./mvnw spring-boot:run</code>)</label></li>
+<li><label><input type="checkbox" />Interface Web accessible sur
+<code>http://localhost:8081</code></label></li>
+<li><label><input type="checkbox" />API REST testable sur
+<code>http://localhost:8081/api/...</code></label></li>
+<li><label><input type="checkbox" />Architecture 3 couches visible dans
+le code</label></li>
+<li><label><input type="checkbox" />Au moins 3 tables MySQL avec
+données</label></li>
+<li><label><input type="checkbox" />Au moins une requête SQL avec JOIN
+fonctionnelle</label></li>
+<li><label><input type="checkbox" />JdbcClient utilisé dans les
+<code>@Repository</code></label></li>
+<li><label><input type="checkbox" />simpleflatmapper utilisé pour le
+mapping JOIN</label></li>
+<li><label><input type="checkbox" />CRUD complet sur Profession,
+Candidat, Formation</label></li>
+</ul>
+<h3 id="qualité">Qualité</h3>
+<ul class="task-list">
+<li><label><input type="checkbox" />DTOs séparés des modèles (pas
+d’exposition directe des entités)</label></li>
+<li><label><input type="checkbox" />Validation des formulaires
+(annotations + messages)</label></li>
+<li><label><input type="checkbox" />Gestion des erreurs (404,
+validation)</label></li>
+<li><label><input type="checkbox" />Code poussé sur GitHub (branche
+<code>main</code>)</label></li>
+<li><label><input type="checkbox" />Pas de credentials en dur dans le
+code source public</label></li>
+</ul>
+<h3 id="démonstration-orale-si-présentation">Démonstration orale (si
+présentation)</h3>
+<ul class="task-list">
+<li><label><input type="checkbox" />Savoir expliquer le flux
+MVC</label></li>
+<li><label><input type="checkbox" />Savoir montrer une requête JOIN dans
+le code</label></li>
+<li><label><input type="checkbox" />Savoir tester un endpoint Postman en
+direct</label></li>
+<li><label><input type="checkbox" />Savoir expliquer le rôle de
+simpleflatmapper</label></li>
+</ul>
+<hr />
+<h2 id="estimation-du-temps">13. Estimation du temps</h2>
+<table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>Durée estimée</th>
+<th>Cumul</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Phase 0 — Préparation</td>
+<td>1h</td>
+<td>1h</td>
+</tr>
+<tr>
+<td>Phase 1 — Repositories</td>
+<td>4h</td>
+<td>5h</td>
+</tr>
+<tr>
+<td>Phase 2 — Services + DTOs</td>
+<td>3h</td>
+<td>8h</td>
+</tr>
+<tr>
+<td>Phase 3 — API REST</td>
+<td>2h</td>
+<td>10h</td>
+</tr>
+<tr>
+<td>Phase 4 — Web Thymeleaf</td>
+<td>5h</td>
+<td>15h</td>
+</tr>
+<tr>
+<td>Phase 5 — Finitions</td>
+<td>2h</td>
+<td>17h</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Total estimé : ~17 heures</strong> (2–3 jours de travail
+concentré, ou 1 semaine à raison de 2–3h/jour)</p>
+<hr />
+<h2 id="références">Références</h2>
+<ul>
+<li>Consignes examen :
+<code>docs/spring-projet-dispositions-pratiques-2025-26.pdf</code></li>
+<li>Cours Spring : <code>docs/spring-lmd3-01.pdf</code></li>
+<li>simpleflatmapper : https://simpleflatmapper.org</li>
+<li>Spring Boot 4 docs :
+https://docs.spring.io/spring-boot/docs/current/reference/html/</li>
+<li>Thymeleaf : https://www.thymeleaf.org</li>
+</ul>
+<hr />
+<p><em>Document généré pour le projet individuel Spring — UPC
+LMD3</em></p>
+</body>
+</html>
