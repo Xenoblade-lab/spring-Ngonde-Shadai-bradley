@@ -2,6 +2,8 @@ package edu.upc.models.dtos;
 
 import java.sql.Date;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -39,6 +41,7 @@ public class CandidatDto {
 	private String lieuNais;
 
 	@NotNull(message = "Date de naissance invalide")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date dateNais;
 
 }

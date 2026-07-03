@@ -1,16 +1,47 @@
-<nav th:fragment="nav" class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
+<nav th:fragment="nav" class="navbar navbar-expand-lg navbar-dark bg-primary mb-3 mb-md-4">
     <div class="container">
-        <a class="navbar-brand" th:href="@{/}" th:text="#{app.title}">App</a>
-        <div class="navbar-nav me-auto">
-            <a class="nav-link" th:href="@{/}" th:text="#{nav.home}">Home</a>
-            <a class="nav-link" th:href="@{/professions}" th:text="#{nav.professions}">Professions</a>
-            <a class="nav-link" th:href="@{/candidats}" th:text="#{nav.candidats}">Candidats</a>
-            <a class="nav-link" th:href="@{/formations}" th:text="#{nav.formations}">Formations</a>
-            <a class="nav-link" th:href="@{/candidats-formations}" th:text="#{nav.inscriptions}">Inscriptions</a>
-        </div>
-        <div class="navbar-nav">
-            <a class="nav-link" th:href="@{/(locale='fr')}" th:text="#{lang.fr}">FR</a>
-            <a class="nav-link" th:href="@{/(locale='en')}" th:text="#{lang.en}">EN</a>
+        <a class="navbar-brand" th:href="@{/(locale=${navLocaleCode})}" th:text="#{app.title}">App</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar"
+                aria-controls="mainNavbar" aria-expanded="false" th:attr="aria-label=#{nav.menu}">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="mainNavbar">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/(locale=${navLocaleCode})}" th:text="#{nav.home}"
+                       th:classappend="${navHome} ? ' active' : ''"
+                       th:attr="aria-current=${navHome} ? 'page' : null">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/professions(locale=${navLocaleCode})}" th:text="#{nav.professions}"
+                       th:classappend="${navProfessions} ? ' active' : ''"
+                       th:attr="aria-current=${navProfessions} ? 'page' : null">Professions</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/candidats(locale=${navLocaleCode})}" th:text="#{nav.candidats}"
+                       th:classappend="${navCandidats} ? ' active' : ''"
+                       th:attr="aria-current=${navCandidats} ? 'page' : null">Candidats</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/formations(locale=${navLocaleCode})}" th:text="#{nav.formations}"
+                       th:classappend="${navFormations} ? ' active' : ''"
+                       th:attr="aria-current=${navFormations} ? 'page' : null">Formations</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/candidats-formations(locale=${navLocaleCode})}" th:text="#{nav.inscriptions}"
+                       th:classappend="${navInscriptions} ? ' active' : ''"
+                       th:attr="aria-current=${navInscriptions} ? 'page' : null">Inscriptions</a>
+                </li>
+            </ul>
+            <div class="navbar-lang d-flex align-items-center gap-2 ms-lg-3 mt-2 mt-lg-0">
+                <span class="navbar-lang-label d-none d-lg-inline" th:text="#{nav.language}">Langue</span>
+                <div class="btn-group btn-group-sm lang-switch" role="group" th:attr="aria-label=#{nav.language}">
+                    <a class="btn" th:href="${navFrUrl}" th:text="#{lang.fr}"
+                       th:classappend="${navLocaleFr} ? ' btn-light active' : ' btn-outline-light'">FR</a>
+                    <a class="btn" th:href="${navEnUrl}" th:text="#{lang.en}"
+                       th:classappend="${navLocaleEn} ? ' btn-light active' : ' btn-outline-light'">EN</a>
+                </div>
+            </div>
         </div>
     </div>
 </nav>
