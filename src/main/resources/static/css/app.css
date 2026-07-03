@@ -16,8 +16,20 @@ body {
     border-left: 4px solid #dc3545;
 }
 
-.table-actions a {
-    margin-right: 0.5rem;
+.table-actions {
+    white-space: nowrap;
+}
+
+.table-actions .btn-group .btn {
+    min-width: 5.5rem;
+}
+
+.table-actions .btn-outline-primary:hover {
+    color: #fff;
+}
+
+.table > :not(caption) > * > * {
+    vertical-align: middle;
 }
 
 .form-error {

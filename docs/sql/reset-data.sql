@@ -1,7 +1,9 @@
 -- Réinitialise la base avec le jeu de données de démonstration.
--- Exécuter dans HeidiSQL ou : mysql -u root < docs/sql/reset-data.sql
+-- Exécuter dans HeidiSQL ou : mysql -u root --default-character-set=utf8mb4 < docs/sql/reset-data.sql
 
 USE demo_lmd_2526_01;
+
+SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 SET FOREIGN_KEY_CHECKS = 0;
 TRUNCATE TABLE candidats_formations;

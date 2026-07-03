@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<td th:fragment="cell(editUrl, deleteUrl)" class="table-actions">
+    <div class="btn-group btn-group-sm" role="group" aria-label="Actions">
+        <a th:if="${editUrl != null}"
+           class="btn btn-outline-primary"
+           th:href="${editUrl}"
+           th:text="#{action.edit}">Éditer</a>
+        <a class="btn btn-outline-danger"
+           th:href="${deleteUrl}"
+           th:data-confirm="#{confirm.delete}"
+           onclick="return confirm(this.dataset.confirm);"
+           th:text="#{action.delete}">Supprimer</a>
+    </div>
+</td>
+</body>
+</html>

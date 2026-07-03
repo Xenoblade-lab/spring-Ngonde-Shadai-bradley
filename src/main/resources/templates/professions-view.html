@@ -26,11 +26,7 @@
         <tr th:each="row : ${rows}">
             <td th:text="${row.id}">1</td>
             <td th:text="${row.description}">Desc</td>
-            <td class="table-actions">
-                <a th:href="@{/professions/{id}/edit(id=${row.id})}" th:text="#{action.edit}">Éditer</a>
-                <a th:href="@{/professions/{id}/delete(id=${row.id})}" th:text="#{action.delete}"
-                   th:data-confirm="#{confirm.delete}" onclick="return confirm(this.dataset.confirm);">Supprimer</a>
-            </td>
+            <td th:replace="~{fragments/table-actions :: cell(@{/professions/{id}/edit(id=${row.id})}, @{/professions/{id}/delete(id=${row.id})})}"></td>
         </tr>
         <tr th:if="${#lists.isEmpty(rows)}">
             <td colspan="3" th:text="#{empty}">Aucune donnée</td>
