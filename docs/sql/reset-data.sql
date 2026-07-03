@@ -1,23 +1,28 @@
+-- Réinitialise la base avec le jeu de données de démonstration.
+-- Exécuter dans HeidiSQL ou : mysql -u root < docs/sql/reset-data.sql
+
 USE demo_lmd_2526_01;
 
--- Jeu de données de démonstration — Gestion Candidats & Formations
--- (réexécuter reset-data.sql pour repartir d'une base propre)
+SET FOREIGN_KEY_CHECKS = 0;
+TRUNCATE TABLE candidats_formations;
+TRUNCATE TABLE candidats;
+TRUNCATE TABLE formations;
+TRUNCATE TABLE professions;
+SET FOREIGN_KEY_CHECKS = 1;
 
 INSERT INTO professions (description) VALUES
 ('Informaticien'),
 ('Comptable'),
 ('Infirmier'),
 ('Enseignant'),
-('Ingénieur civil')
-ON DUPLICATE KEY UPDATE description = VALUES(description);
+('Ingénieur civil');
 
 INSERT INTO formations (description, duree) VALUES
 ('Spring Framework', 3),
 ('MySQL avancé', 2),
 ('Comptabilité générale', 6),
 ('Développement Web', 4),
-('Soins infirmiers', 12)
-ON DUPLICATE KEY UPDATE duree = VALUES(duree);
+('Soins infirmiers', 12);
 
 INSERT INTO candidats (profession_pk, noms, genre, etat_civil, lieu_nais, date_nais) VALUES
 (1, 'Ngonde Shadai Bradley', 'M', 'Célibataire', 'Kinshasa', '2000-05-15'),

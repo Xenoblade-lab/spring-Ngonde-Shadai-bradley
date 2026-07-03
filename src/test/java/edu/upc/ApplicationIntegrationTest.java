@@ -9,9 +9,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,6 +27,7 @@ import com.jayway.jsonpath.JsonPath;
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ApplicationIntegrationTest {
 
 	@Autowired
@@ -176,20 +179,27 @@ class ApplicationIntegrationTest {
 				.andExpect(status().isOk());
 	}
 
-	@Test
-	@Order(99)
+	@AfterAll
 	void cleanupTestData() throws Exception {
+		cleanupCreatedEntities();
+	}
+
+	private void cleanupCreatedEntities() throws Exception {
 		if (inscriptionId != null) {
 			mockMvc.perform(delete("/api/candidats-formations/" + inscriptionId));
+			inscriptionId = null;
 		}
 		if (candidatId != null) {
 			mockMvc.perform(delete("/api/candidats/" + candidatId));
+			candidatId = null;
 		}
 		if (formationId != null) {
 			mockMvc.perform(delete("/api/formations/" + formationId));
+			formationId = null;
 		}
 		if (professionId != null) {
 			mockMvc.perform(delete("/api/professions/" + professionId));
+			professionId = null;
 		}
 	}
 
